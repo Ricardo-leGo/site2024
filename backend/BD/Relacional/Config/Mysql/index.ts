@@ -1,17 +1,23 @@
 import { Sequelize } from "sequelize";
 
-export 
-default (
+export const MysqlConecctio = (
+    
     host    :string,
-    databse :string, 
+    database :string, 
     username:string, 
     pass    :string
+
     ) => new Sequelize(
-        databse,
+        database,
         username,
-        pass
+        pass,
         {
+
         host,
         dialect:'mysql',
         logging:false
+
     });
+
+
+

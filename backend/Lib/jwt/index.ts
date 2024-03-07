@@ -14,15 +14,12 @@ export default class JWTLIB {
         try {
              jwt.verify(token, this.secretKey); 
 
-             return {msg:`El token es válido`,ValidToken:true};
+             return {msg:`El token es válido, bienvenido.`,ValidToken:true};
         } catch( e ){
 
              return {msg: `EL token es inválido. ${e}`, ValidToken:false}
         }
-        return {
-            msg:"", 
-            ValidToken:false
-        }
+ 
     }
 
     decodeToken = (token:string) =>jwt.decode(token);

@@ -1,3 +1,11 @@
+import * as         dotenv          from 'dotenv';
+dotenv.config();
+console.log(
+
+  process.env.SECRET_KEYBackend,
+  
+
+);
 /* eslint-disable */
 import { ApolloServer } from 'apollo-server-micro';
 /* eslint-enable */
@@ -11,7 +19,7 @@ import { RequestContext } from 'next/dist/server/base-server';
 import JWTLIB from '../../../backend/Lib/jwt';
 import  {JwtPayload} from 'jsonwebtoken';
 
-interface contexto {
+interface IContexto {
   User?:string | JwtPayload | null,
   token:string | undefined,
   msg?:string
@@ -29,7 +37,8 @@ const resolvers = {
 const UserfromToken = (token:string=""):any    => new JWTLIB().decodeToken( token );
 const VerifyToken = (token:string)   => new JWTLIB()     .Verify( token );
 
-const context= ({req}:RequestContext):contexto => {
+const context= ({req}:RequestContext):IContexto => {
+
   const  token = req.headers.authorization ?? "";
   const {msg, ValidToken}:IValidToken = VerifyToken( token ); 
 
@@ -39,13 +48,16 @@ const context= ({req}:RequestContext):contexto => {
       token,
       User:UserfromToken( token )
     }
+
   }else{
+
     return {
       token:undefined,
       User:null,
       msg:"Se necesitan credenciales"+ " \n " +`${msg}`
 
     }
+
   }
 
 }

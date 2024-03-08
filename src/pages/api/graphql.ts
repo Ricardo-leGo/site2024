@@ -28,7 +28,7 @@ export const config: PageConfig = {
 };
 
 /* eslint-disable */
-export default cors(async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default cors(async function handler(req, res ) {
   if (req.method === 'OPTIONS') {
     return await send(res, 200, 'OK');
   }

@@ -1,11 +1,9 @@
 import  gql  from 'graphql-tag';
-import hello from './hello';
 import Login from './Login';
 
 export const linkSchema = gql`
   type Query {
     _: Boolean
-    nuevaquery:String
   }
 
   type Mutation {

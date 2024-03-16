@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-export const MysqlConecctio = (
+export const MysqSequelize = (
     
     host    :string,
     database :string, 
@@ -19,5 +19,13 @@ export const MysqlConecctio = (
 
     });
 
+
+
+
+    // export const  MySqlConnection = () => MysqSequelize(
+
+    //     process.env.HOSTMYSQL,
+    //     data
+    // )
 
 

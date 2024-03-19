@@ -1,6 +1,7 @@
 import { secret } from '../constants';
-import  *  as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
+import {AuthenticationError } from 'apollo-server-micro';
 
 export default class JWTLIB {
     static verificadordeExport: string;
@@ -10,14 +11,15 @@ export default class JWTLIB {
 
     Sign = async  (data:any) =>{return   jwt.sign( await data, this.secretKey,{ expiresIn: 60 * 60 * 2 })};
 
-    Verify = (token:string="")=> {
+    Verify = (token:string="") :{msg?:string, ValidToken?:boolean, AutenticationError?:AuthenticationError} => {
         try {
              jwt.verify(token, this.secretKey); 
 
-             return {msg:`El token es válido, bienvenido.`,ValidToken:true};
-        } catch( e ){
+             return {msg:`Bienvenido.`,ValidToken:true};
 
-             return {msg: `EL token es inválido. ${e}`, ValidToken:false}
+        } catch( error:any ){
+            if(error.name == 'TokenExpiredError') return  {AutenticationError:new AuthenticationError("El token ha expirado")};
+            return  {AutenticationError:new AuthenticationError("El token es inválido")};
         }
  
     }

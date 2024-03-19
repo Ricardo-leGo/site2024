@@ -7,7 +7,7 @@ console.log(
 
 );
 /* eslint-disable */
-import { ApolloServer } from 'apollo-server-micro';
+import { ApolloServer, Config } from 'apollo-server-micro';
 /* eslint-enable */
 
 import { NextApiRequest, NextApiResponse, PageConfig } from 'next';
@@ -49,39 +49,46 @@ export interface IUser{
   Name:string
   LastName:string
   Rol:string
-  IdUser:string
+  IdUser:number
 }
 
-const resolvers = {
-  Query: {...Query }
-};
+// const resolvers = {
+//   ...Query
+// };
+
 
 const User:Function = (token:string=""):IUser => new JWTLIB().decodeToken( token );
 const VerifyToken = (token:string)   => new JWTLIB()     .Verify( token );
 
-const context= (req:MicroRequest):IContexto => {
+const context:Function = (req:MicroRequest):IContexto | undefined => {
 
   const  token = req.headers.authorization ?? "";
   const {msg, ValidToken}:IValidToken = VerifyToken( token ); 
 
   const contexto = {
     token,
-    User:User( token )
+    User: <IUser>User( token )
   }
 
+  console.log(contexto);
+
   if(ValidToken){
+
+
     return {
       typeDefs,
-      resolvers,
+      resolvers:Query( contexto?.User?.Rol),
       contexto,
     }
 
-  }else{
-    console.log(ValidToken, "ValidToken");
+  }
+  
+  
+  if(!ValidToken){
 
     return {
       typeDefs,
-      resolvers,
+      resolvers:Query( contexto?.User?.Rol),
       contexto,
     }
   }
@@ -89,7 +96,9 @@ const context= (req:MicroRequest):IContexto => {
 }
 
 const apolloServer = async function(req:MicroRequest){
-  return new ApolloServer( context( req ) );
+
+
+  return new ApolloServer( <Config<any>>context( req ) );
 }
 
 const cors = microCors({

@@ -1,7 +1,7 @@
 
 import Login from "../Modules/Auth/Login"
 
-export default (rol:string|undefined) => {
+export default (rol:string|undefined|null) => {
   
   
   let Query= {

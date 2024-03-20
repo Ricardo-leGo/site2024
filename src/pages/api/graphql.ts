@@ -28,12 +28,23 @@ import { MicroRequest } from 'apollo-server-micro/dist/types';
 // }
 
 
+export interface IUser{
+  
+  Name    :string | null
+  LastName:string | null
+  Rol     :string | null
+  IdUser  :number | null
+}
+interface ILocalContext{
+
+    User?:IUser | null,
+    token:string | undefined | null,
+    msg?:string, 
+
+}
+
  interface IContexto {
- contexto:{
-   User?:string | JwtPayload | null,
-   token:string | undefined,
-   msg?:string, 
-  }  
+ contexto:ILocalContext
    resolvers:{
      Query:IResolvers
    },
@@ -44,37 +55,34 @@ interface IValidToken{
   msg:string,
   ValidToken:boolean
 }
-export interface IUser{
-  
-  Name:string
-  LastName:string
-  Rol:string
-  IdUser:number
-}
+
 
 // const resolvers = {
 //   ...Query
 // };
 
-
-const User:Function = (token:string=""):IUser => new JWTLIB().decodeToken( token );
+const User:Function | null = (token:string=""):IUser => new JWTLIB().decodeToken( token );
 const VerifyToken = (token:string)   => new JWTLIB()     .Verify( token );
 
 const context:Function = (req:MicroRequest):IContexto | undefined => {
 
-  const  token = req.headers.authorization ?? "";
+  const  token:string | null = req.headers.authorization ?? "";
   const {msg, ValidToken}:IValidToken = VerifyToken( token ); 
 
-  const contexto = {
-    token,
-    User: <IUser>User( token )
-  }
+  let contexto:ILocalContext | null= null;
 
-  console.log(contexto);
+  
+  console.log(contexto, ValidToken);
+
+
 
   if(ValidToken){
 
-
+    contexto = {
+      token,
+      User: <IUser>User( token )
+    }
+    
     return {
       typeDefs,
       resolvers:Query( contexto?.User?.Rol),
@@ -86,9 +94,14 @@ const context:Function = (req:MicroRequest):IContexto | undefined => {
   
   if(!ValidToken){
 
+    contexto = {
+      token:null,
+      User: null
+    }
+
     return {
       typeDefs,
-      resolvers:Query( contexto?.User?.Rol),
+      resolvers:Query( undefined ),
       contexto,
     }
   }

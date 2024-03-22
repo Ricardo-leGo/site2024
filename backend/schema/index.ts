@@ -1,7 +1,9 @@
 import  gql  from 'graphql-tag';
 import Login from './Login';
+import Error from './Error';
 
 export const linkSchema = gql`
+
   type Query {
     _: Boolean
   }
@@ -17,5 +19,6 @@ export const linkSchema = gql`
 
 export default [
   linkSchema, 
-  Login
+  Login, 
+  Error
  ]

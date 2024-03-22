@@ -7,65 +7,99 @@ console.log(
 
 );
 /* eslint-disable */
-import { ApolloServer } from 'apollo-server-micro';
+import { ApolloServer, AuthenticationError, Config } from 'apollo-server-micro';
 /* eslint-enable */
 
-import { NextApiRequest, NextApiResponse, PageConfig } from 'next';
+import { PageConfig } from 'next';
 import { send } from 'micro';
 import Query  from '../../../backend/Querys/Querys';
 import microCors from 'micro-cors'; // Importa micro-cors
 import typeDefs from '../../../backend/schema'
-import { RequestContext } from 'next/dist/server/base-server';
 import JWTLIB from '../../../backend/Lib/jwt';
 import  {JwtPayload} from 'jsonwebtoken';
+import { TypeSource, IResolvers } from '@graphql-tools/utils';
+import { MicroRequest } from 'apollo-server-micro/dist/types';
 
-interface IContexto {
-  User?:string | JwtPayload | null,
-  token:string | undefined,
-  msg?:string,
-  statusCode:number|undefined
-}
+// interface IContexto {
+//   User?:string | JwtPayload | null,
+//   token:string | undefined,
+//   msg?:string
+// }
+
+
+ interface IContexto {
+ contexto:{
+   User?:string | JwtPayload | null,
+   token:string | undefined,
+   msg?:string, 
+  }  
+   resolvers:{
+     Query:IResolvers
+   },
+   typeDefs:TypeSource | undefined
+ }
 
 interface IValidToken{
-  msg:string,
-  ValidToken:boolean
+  msg?:string,
+  ValidToken?:boolean
+  AutenticationError?:AuthenticationError
+}
+export interface IUser{
+  
+  Name:string
+  LastName:string
+  Rol:string
+  IdUser:number
 }
 
-const resolvers = {
-  Query: {...Query }
-};
+// const resolvers = {
+//   ...Query
+// };
 
-const UserfromToken = (token:string=""):any    => new JWTLIB().decodeToken( token );
+
+const User:Function = (token:string=""):IUser => new JWTLIB().decodeToken( token );
 const VerifyToken = (token:string)   => new JWTLIB()     .Verify( token );
 
-  const context= ({req, res} :RequestContext):IContexto => {
+const context:Function = (req:MicroRequest):IContexto | undefined => {
 
   const  token = req.headers.authorization ?? "";
   const {msg, ValidToken}:IValidToken = VerifyToken( token ); 
 
+  const contexto = {
+    token,
+    User: <IUser>User( token )
+  }
+
+  console.log(contexto);
+
   if(ValidToken){
 
-    return {
-      token,
-      User:UserfromToken( token ),
-      statusCode:200
-    }
-
-  }else{
 
     return {
-      token:undefined,
-      msg:"Haz logín para obtener credenciales",
-      statusCode:403
+      typeDefs,
+      resolvers:Query( contexto?.User?.Rol),
+      contexto,
     }
 
-  };
+  }
+  
+  
+  if(!ValidToken){
 
+    return {
+      typeDefs,
+      resolvers:Query( contexto?.User?.Rol),
+      contexto,
+    }
+  }
 
 }
 
-const apolloServer = new ApolloServer({ typeDefs, resolvers, context });
-const startServer = apolloServer.start();
+const apolloServer = async function(req:MicroRequest){
+
+
+  return new ApolloServer( <Config<any>>context( req ) );
+}
 
 const cors = microCors({
   allowMethods: ['GET', 'POST', 'OPTIONS'],
@@ -88,14 +122,20 @@ export default cors(
     return await send(res, 200, 'OK');
   }
 /* eslint-enable */
-
-  try {
-    await startServer;
-    await apolloServer.createHandler({
+const ServerStarted = await apolloServer(req);
+try {
+  
+  await ServerStarted.start();
+      
+   await ServerStarted.createHandler({
       path: '/api/graphql',
     })(req, res);
+
+
   } catch (error) {
     console.error('Error starting Apollo Server:', error);
     send(res, 500, 'Internal Server Error');
   }
 });
+
+

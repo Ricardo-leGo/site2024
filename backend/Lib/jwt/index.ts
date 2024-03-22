@@ -1,3 +1,4 @@
+import { IUser } from '@/pages/api/graphql';
 import { secret } from '../constants';
 import jwt from 'jsonwebtoken';
 
@@ -24,7 +25,7 @@ export default class JWTLIB {
  
     }
 
-    decodeToken = (token:string) =>jwt.decode(token);
+    decodeToken = (token:string):any =>jwt.decode(token);
 
 
 };

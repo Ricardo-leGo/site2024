@@ -16,16 +16,8 @@ import Query  from '../../../backend/Querys/Querys';
 import microCors from 'micro-cors'; // Importa micro-cors
 import typeDefs from '../../../backend/schema'
 import JWTLIB from '../../../backend/Lib/jwt';
-import  {JwtPayload} from 'jsonwebtoken';
 import { TypeSource, IResolvers } from '@graphql-tools/utils';
 import { MicroRequest } from 'apollo-server-micro/dist/types';
-
-// interface IContexto {
-//   User?:string | JwtPayload | null,
-//   token:string | undefined,
-//   msg?:string
-// }
-
 
 export interface IUser{
   
@@ -57,10 +49,6 @@ interface IValidToken{
 }
 
 
-// const resolvers = {
-//   ...Query
-// };
-
 const User:Function | null = (token:string=""):IUser => new JWTLIB().decodeToken( token );
 const VerifyToken = (token:string)   => new JWTLIB()     .Verify( token );
 
@@ -71,21 +59,16 @@ const context:Function = (req:MicroRequest):IContexto | undefined => {
 
   let contexto:ILocalContext | null= null;
 
-  
-  console.log(contexto, ValidToken);
-
-
-
   if(ValidToken){
 
     contexto = {
       token,
       User: <IUser>User( token )
     }
-    
+    console.log(contexto.User);
     return {
-      typeDefs,
-      resolvers:Query( contexto?.User?.Rol),
+      typeDefs:typeDefs( contexto.User?.Rol as string ),
+      resolvers:Query( contexto.User?.Rol),
       contexto,
     }
 
@@ -100,7 +83,7 @@ const context:Function = (req:MicroRequest):IContexto | undefined => {
     }
 
     return {
-      typeDefs,
+      typeDefs:typeDefs(undefined),
       resolvers:Query( undefined ),
       contexto,
     }

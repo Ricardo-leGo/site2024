@@ -1,22 +1,24 @@
 import JWTLIB from "../../../Lib/jwt";
 
-
-export default async (_:void, data:any, context:any):Promise<{Token:string}| null> => {
-
+export default async (_:void, data:any, context:any):Promise<{Token:string | undefined}> => {
 
     console.log("data", data, context);
 
-    const Token = await  new JWTLIB().Sign(
-        {
-            Name:"Usuario",
-            LastName:"LastName",
-            Rol:"Rol",
-            IdUser:1
-        }
+    let Token:string|undefined|null
+    if(data.UserLogin.User="Ricardo" && data.UserLogin.Password=="123456"){
 
-    )
+      Token = await  new JWTLIB().Sign(
+            {
+                Name:"Ricardo",
+                LastName:"LeyvaGonzalez",
+                Rol:"Admin",
+                IdUser:1
+            }
+        );
+        
+    }
 
-    console.log(Token);
+    console.log(Token,"asdasdas");
 
-    return {Token}
+    return {Token:Token??""}
 }

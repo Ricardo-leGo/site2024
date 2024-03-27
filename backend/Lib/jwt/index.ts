@@ -10,7 +10,7 @@ export default class JWTLIB {
     constructor(){}
     secretKey:string = secret.toString();
 
-    Sign = async  (data:any) =>{return   jwt.sign( await data, this.secretKey,{ expiresIn: 60 * 60 * 2 })};
+    Sign = async  (data:any) =>{ return jwt.sign( await data, this.secretKey,{ expiresIn: 60 * 60 * 2 })};
 
     Verify = (token:string="") :{msg?:string, ValidToken?:boolean, AutenticationError?:AuthenticationError} => {
         try {

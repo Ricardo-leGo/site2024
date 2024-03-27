@@ -4,7 +4,7 @@ export default gql`
   
   input UserLogin{
     Password:String
-    Email:String
+    User:String
   }
   type User{
   Name:String

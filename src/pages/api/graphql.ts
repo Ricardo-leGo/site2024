@@ -65,7 +65,6 @@ const context:Function = (req:MicroRequest):IContexto | undefined => {
       token,
       User: <IUser>User( token )
     }
-    console.log(contexto.User);
     return {
       typeDefs:typeDefs( contexto.User?.Rol as string ),
       resolvers:Query( contexto.User?.Rol),

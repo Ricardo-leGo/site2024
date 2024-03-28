@@ -16,8 +16,28 @@ CREATE TABLE Usuarios (
 
 Crate Table Roles (
     Id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    Rol varchar(128),
+    Rol varchar(128)
+);
+
+Create Table Menu(
+    Id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    Position int null, 
+    [Name] Varchar(30) null, 
+    [Type] varchar(30) null default  "Container", --Container/SubMenu
+    [Active] bit not null default 1
+);
 
 
+Create Table SubMenu(
+    Id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    [Name] Varchar(30) null,
     
-)
+);
+
+
+
+
+
+
+
+

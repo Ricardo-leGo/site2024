@@ -1,6 +1,7 @@
 
 import Login from "../Modules/Auth/Login"
 import ControlPanel from "../Modules/ControPanel"
+import GeneralViews from "../Modules/GeneralViews";
 
 export default (rol:string|undefined|null) => {
   
@@ -11,15 +12,14 @@ export default (rol:string|undefined|null) => {
       Error: () => 'No puedes pasar Query'
     }
   };
-  console.log(rol, " rol querys ");
 
      switch (rol) {
-   
       case "Admin":
         Query = {
           Query:{
 
-            ControPanel: async (_:void, data:any, context:any) => ControlPanel(_, data, context)
+            ControPanel: async (_:void, data:any, context:any) => ControlPanel(_, data, context),
+            ...GeneralViews
           }
         }
         break;

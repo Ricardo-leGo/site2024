@@ -10,7 +10,7 @@ export default async (_:void, data:any, context:any):Promise<{Token:string | und
       Token = await  new JWTLIB().Sign(
             {
                 Name:"Ricardo",
-                LastName:"LeyvaGonzalez",
+                LastName:"Leyva Gonzalez",
                 Rol:"Admin",
                 IdUser:1
             }
@@ -18,7 +18,7 @@ export default async (_:void, data:any, context:any):Promise<{Token:string | und
         
     }
 
-    console.log(Token,"asdasdas");
+    console.log(Token);
 
     return {Token:Token??""}
 }

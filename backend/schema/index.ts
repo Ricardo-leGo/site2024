@@ -20,8 +20,6 @@ export const linkSchema = gql`
 
 export default  (rol:string| undefined) => 
 {
-
-console.log(rol, " rol typedefs ");
   let typedefs =[linkSchema];
 
   switch (rol) {
@@ -36,7 +34,6 @@ console.log(rol, " rol typedefs ");
             linkSchema,
             Login
            ] ;
-           console.log("Client");
         
         break;
       case undefined:
@@ -45,7 +42,6 @@ console.log(rol, " rol typedefs ");
             Login, 
             Error
            ] ;
-           console.log("undefined");
         
         break;
     default:
@@ -56,7 +52,6 @@ console.log(rol, " rol typedefs ");
      ];
       break;
   }
-//console.log( JSON.stringify(typedefs, null, 2) );
   return typedefs;
 }
 

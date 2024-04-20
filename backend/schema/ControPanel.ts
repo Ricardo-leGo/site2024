@@ -9,5 +9,7 @@ Controles:String
 
 type Query {
     ControPanel:ControPanelView
+    Home:ControPanelView
+    Contact:ControPanelView
   }
 `

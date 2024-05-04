@@ -19,6 +19,31 @@ Create Table Roles (
     Rol varchar(128)
 );
 
+Create Table Permisos (
+
+    Id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    Permiso text null
+)
+
+Create Table RolesPermisos(
+    Id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    IdRolFK int not null,
+    IdPermisoFK int not  null
+    CONSTRAINT Fk_RolesPermisos_Roles FOREIGN KEY ( IdRolFK ) REFERENCES Roles(ID),
+    CONSTRAINT Fk_RolesPermisos_Permisos FOREIGN KEY ( IdPermisoFK ) REFERENCES Permisos(ID)
+)
+
+
+Create Table UsuariosRoles(
+    
+    Id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    IdRolFK int not null,
+    IdUsuarioFK int not null, 
+    CONSTRAINT Fk_UsuariosRoles_Roles FOREIGN KEY ( IdRolFK ) REFERENCES Roles(ID),
+    CONSTRAINT Fk_UsuariosRoles_Usuarios FOREIGN KEY ( IdUsuarioFK ) REFERENCES Usuarios(ID)
+
+)
+
 Create Table Menu(
     Id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     Position int null, 

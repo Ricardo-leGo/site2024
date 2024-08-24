@@ -4,7 +4,8 @@ export default async (_:void, data:any, context:any):Promise<{Token:string | und
 
     console.log("data", data, context);
 
-    let Token:string|undefined|null
+    let Token:string|undefined|null;
+
     if(data.UserLogin.User="Ricardo" && data.UserLogin.Password=="123456"){
 
       Token = await  new JWTLIB().Sign(
@@ -17,8 +18,6 @@ export default async (_:void, data:any, context:any):Promise<{Token:string | und
         );
         
     }
-
-    console.log(Token);
 
     return {Token:Token??""}
 }
